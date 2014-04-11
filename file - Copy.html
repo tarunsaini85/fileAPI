@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Untitled Document</title>
+<style>
+  .thumb {
+    height: 75px;
+    border: 1px solid #000;
+    margin: 10px 5px 0 0;
+  }
+</style>
+</head>
+
+<body>
+<input type="file" onchange="handleFileSelect1(event);handleFileSelect2(event)" multiple />
+<br />
+<output id="list"></output>
+<script type="text/javascript">
+  function handleFileSelect1(evt) {
+    var files = evt.target.files;
+    for (var i = 0, f; f = files[i]; i++){
+		console.log(f.name,f.type,f.size,f.lastModifiedDate)
+    }
+  }
+  
+  function handleFileSelect2(evt) {
+    var files = evt.target.files;
+    for (var i = 0, f; f = files[i]; i++) {
+
+      if (!f.type.match('image.*')) {
+        continue;
+      }
+
+      var reader = new FileReader();
+
+      reader.onload = (function(theFile) {
+        return function(e){
+          var span = document.createElement('span');
+          span.innerHTML = ['<img class="thumb" src="', e.target.result,
+                            '" title="', escape(theFile.name), '"/>'].join('');
+          document.getElementById('list').insertBefore(span, null);
+        };
+      })(f);  	  
+      reader.readAsDataURL(f);
+    }
+  }
+</script>
+</body>
+</html>
